@@ -1,0 +1,20 @@
+# Usa la imagen oficial de Node.js
+FROM node:20
+
+# Carpeta de trabajo dentro del contenedor
+WORKDIR /usr/src/app
+
+# Copia los archivos de package.json y package-lock.json
+COPY package*.json ./
+
+# Instala dependencias
+RUN npm install
+
+# Copia todo el código al contenedor
+COPY . .
+
+# Expone el puerto donde correrá Express
+EXPOSE 5000
+
+# Comando para iniciar la app
+CMD ["node", "src/server.js"]
