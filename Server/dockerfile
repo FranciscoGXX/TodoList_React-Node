@@ -1,11 +1,12 @@
 # Usa la imagen oficial de Node.js
 FROM node:20
 
+# Copia los archivos de package.json y package-lock.json
+COPY package*.json ./
+
 # Carpeta de trabajo dentro del contenedor
 WORKDIR /usr/src/app
 
-# Copia los archivos de package.json y package-lock.json
-COPY package*.json ./
 
 # Instala dependencias
 RUN npm install
@@ -17,4 +18,5 @@ COPY . .
 EXPOSE 5000
 
 # Comando para iniciar la app
-CMD ["node", "src/server.js"]
+CMD ["node", "src/app.js"]
+
