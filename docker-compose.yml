@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: todo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tododb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build: ./Server
+    container_name: todo-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    command: npm run dev
+    volumes:
+      - ./Server:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_NAME=tododb
+      - DB_PORT=5432
+    depends_on:
+      - postgres
+
+  app:
+    build: ./Frontend
+    container_name: todo-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
